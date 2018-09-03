@@ -1,9 +1,5 @@
 let $UpperKeyboard = $('#keyboard-upper-container');
 let $LowerKeyboard = $('#keyboard-lower-container');
-
-$UpperKeyboard.hide();
-
-
 let sentences = ['ten ate neite ate nee enet ite ate inet ent eate', 'Too ato too nOt enot one totA not anot tOO aNot', 'oat itain oat tain nate eate tea anne inant nean', 'itant eate anot eat nato inate eat anot tain eat', 'nee ene ate ite tent tiet ent ine ene ete ene ate'];
 let sentenceIndex = 0;
 let numOfWords = sentences[sentenceIndex].split(" ").length;
@@ -11,13 +7,14 @@ let numOfChar = sentences[sentenceIndex].length;
 let target = sentences[sentenceIndex][0];
 let markCode = ["10004", "10008"];
 let wpm = 0;
-$(`<p>${sentences[sentenceIndex]}</p>`).appendTo('#sentence');
-
-
-
+let tStart = 0;
 let $yHighlighter = $('#yellow-block');
 let yLength = 17;
 let $targetLetter = $('#target-letter');
+
+
+$UpperKeyboard.hide();
+$(`<p>${sentences[sentenceIndex]}</p>`).appendTo('#sentence');
 $targetLetter.text(sentences[sentenceIndex].charAt(0));
 
 
@@ -64,10 +61,13 @@ $('body').on('keydown.Shift', function (e) {
 
 function typeSentence(char, currentPos) {
 
-
+  
 
     switch (currentPos) {
         case 0:
+            if (sentenceIndex == 0) {
+                tStart=timer();
+            }
             placeMark(char);
             charHighlighter(currentPos + yLength);
             target = targeChar(currentPos + 1);
@@ -99,7 +99,7 @@ function adjustSentence(index) {
     if (index < sentences.length - 1) {
 
         index++;
-        numOfWords = sentences[index].split(" ").lenght;
+        numOfWords = sentences[index].split(" ").length;
         numOfChar = sentences[index].length;
 
         $('p').remove();
@@ -108,10 +108,9 @@ function adjustSentence(index) {
 
     }
     else {
-
         index = 0;
         sentenceIndex = 0;
-        numOfWords = sentences[index].split(" ").lenght;
+        numOfWords = sentences[index].split(" ").length;
         numOfChar = sentences[index].length;
 
         $('p').remove();
@@ -139,10 +138,12 @@ function targeChar(currentPos) {
         if (sentenceIndex != sentences.length - 1) {
             $targetLetter.text('Press any key to contine !');
         } else {
-            $targetLetter.text('WPM is ');
+            wpm = typeSpeed(tStart);
+            $targetLetter.text(`WPM is ${wpm}`);
             setTimeout(function () {
                 $targetLetter.text('Press any key to play again !');
-            }, 3000);
+            }, 5000);
+            wpm = 0;
         }
 
 
@@ -173,11 +174,12 @@ function placeMark(char) {
 }
 
 
-function typeSpeed(start, end) {
-    wpm = 0;
+function typeSpeed(start) {
+    let end = timer();
     let numOfMisakes = $('#feedback span.feedback-ex').length;
-    let mintues = (end - start) * (60000) ** -1;
-    return (numOfWords * mintues ** -1) - 2 * numOfMistakes;
+    let minutes = (end - start) * (60000) ** -1;
+    return ((numOfWords * minutes ** -1) - numOfMisakes *(2/numOfWords) ).toFixed(2);
+  
 
 }
 
