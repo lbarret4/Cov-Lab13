@@ -12,13 +12,13 @@ let $yHighlighter = $('#yellow-block');
 let yLength = 17;
 let $targetLetter = $('#target-letter');
 
-
+// Initial setup of typing game with upper keyboard hidden, first sentence and next letter displayed
 $UpperKeyboard.hide();
 $(`<p>${sentences[sentenceIndex]}</p>`).appendTo('#sentence');
 $targetLetter.text(sentences[sentenceIndex].charAt(0));
 
 
-
+//Adds event listener for keypress and keyup events that highlights corresponding keys for either events and advances the next key cursor and next letter prompt. Also shows the  lower keyboard and hides the upper keyboard if the shift key is pressed.   
 $('body').on('keypress keyup', function (e) {
     if (e.key != 'Shift') {
 
@@ -29,8 +29,6 @@ $('body').on('keypress keyup', function (e) {
         if (e.type != 'keyup') {
 
             typeSentence(e.key, currentPos);
-
-
 
         }
 
@@ -43,6 +41,8 @@ $('body').on('keypress keyup', function (e) {
 
 
 });
+
+// Adds event listener for keydown events that hides lower keyboard and shows upper keyboard if the shift key is pressed down. 
 $('body').on('keydown.Shift', function (e) {
     if (e.key == 'Shift' && e.type == 'keydown') {
 
@@ -58,10 +58,8 @@ $('body').on('keydown.Shift', function (e) {
 
 });
 
-
+// Responds to user input to advances the next key cursor and next letter prompt,adds marks for accuracy, changes sentence once user reaches the end and resets cursor and next letter prompt
 function typeSentence(char, currentPos) {
-
-  
 
     switch (currentPos) {
         case 0:
@@ -93,7 +91,7 @@ function typeSentence(char, currentPos) {
 
 
 }
-
+//Cycles through sentences on the display and resets sentences after reaching the ends of all sentences 
 function adjustSentence(index) {
 
     if (index < sentences.length - 1) {
@@ -125,24 +123,25 @@ function adjustSentence(index) {
 
 }
 
+//Moves the next letter cursor and highlights characters upto the provided  current position  
 function charHighlighter(currentPos) {
 
     $yHighlighter.width(`${currentPos}px`);
 }
 
-
+// // Returns the next letter and changes next letter displayed based upon character position within the sentence.
 function targeChar(currentPos) {
 
     if (currentPos == (numOfChar - 1) * yLength) {
 
         if (sentenceIndex != sentences.length - 1) {
-            $targetLetter.text('Press any key to contine !');
+            $targetLetter.text('Press any key to contine to next line!');
         } else {
             wpm = typeSpeed(tStart);
             $targetLetter.text(`WPM is ${wpm}`);
             setTimeout(function () {
-                $targetLetter.text('Press any key to play again !');
-            }, 5000);
+                $targetLetter.text('Press any key to play again!');
+            }, 3500);
             wpm = 0;
         }
 
@@ -156,6 +155,7 @@ function targeChar(currentPos) {
     return $targetLetter.text();
 }
 
+//Places a check mark or an ex mark if the typed key matches or does not match the target key. It leaves an empty space unless the key typed is not a space.
 function placeMark(char) {
 
     let $feedback = $('#feedback');
@@ -173,7 +173,7 @@ function placeMark(char) {
 
 }
 
-
+// Calculates words per minute using formula numberOfWords / minutes -  numberOfMistakes *(2/numberOfWords)
 function typeSpeed(start) {
     let end = timer();
     let numOfMisakes = $('#feedback span.feedback-ex').length;
@@ -183,6 +183,7 @@ function typeSpeed(start) {
 
 }
 
+// Returns current time stamp in milliseconds
 function timer() {
     return performance.now();
 
