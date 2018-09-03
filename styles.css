@@ -32,6 +32,10 @@
 
 #feedback {
   font-size: 20px;
+  text-align: left;
+  position: relative;
+  right: 5px;
+  letter-spacing: 1px;
 }
 .glyphicon-ok {
   color: #1DA237
@@ -43,4 +47,12 @@
 
 .key-highlight {
   background-color: #fcf8e3;
+}
+
+.feedback-check {
+    color: green;
+}
+
+.feedback-ex {
+    color: red;
 }
