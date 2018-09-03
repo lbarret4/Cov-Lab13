@@ -10,7 +10,7 @@ let numOfWords = sentences[sentenceIndex].split(" ").length;
 let numOfChar = sentences[sentenceIndex].length;
 let target = sentences[sentenceIndex][0];
 let markCode = ["10004", "10008"];
-
+let wpm = 0;
 $(`<p>${sentences[sentenceIndex]}</p>`).appendTo('#sentence');
 
 
@@ -30,7 +30,7 @@ $('body').on('keypress keyup', function (e) {
         $(`#${UtfCode}`).toggleClass('key-highlight');
 
         if (e.type != 'keyup') {
-            
+
             typeSentence(e.key, currentPos);
 
 
@@ -135,7 +135,16 @@ function charHighlighter(currentPos) {
 function targeChar(currentPos) {
 
     if (currentPos == (numOfChar - 1) * yLength) {
-        $targetLetter.text('Press any key to contine');
+
+        if (sentenceIndex != sentences.length - 1) {
+            $targetLetter.text('Press any key to contine !');
+        } else {
+            $targetLetter.text('WPM is ');
+            setTimeout(function () {
+                $targetLetter.text('Press any key to play again !');
+            }, 3000);
+        }
+
 
     } else if (currentPos == 0) {
         $targetLetter.text(sentences[sentenceIndex].charAt(currentPos / yLength));
@@ -164,15 +173,15 @@ function placeMark(char) {
 }
 
 
-function typeSpeed(start,end){
+function typeSpeed(start, end) {
+    wpm = 0;
     let numOfMisakes = $('#feedback span.feedback-ex').length;
-    let mintues = (end-start)*(60000)**-1;
-    let wpm = (numOfWords*mintues**-1)-2*numOfMistakes;
-    return wpm;
-    
+    let mintues = (end - start) * (60000) ** -1;
+    return (numOfWords * mintues ** -1) - 2 * numOfMistakes;
+
 }
 
-function timer(){
+function timer() {
     return performance.now();
-    
+
 }
