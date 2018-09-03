@@ -6,7 +6,7 @@ $UpperKeyboard.hide();
 
 let sentences = ['ten ate neite ate nee enet ite ate inet ent eate', 'Too ato too nOt enot one totA not anot tOO aNot', 'oat itain oat tain nate eate tea anne inant nean', 'itant eate anot eat nato inate eat anot tain eat', 'nee ene ate ite tent tiet ent ine ene ete ene ate'];
 let sentenceIndex = 0;
-let numOfWords = sentences[sentenceIndex].split(" ").lenght;
+let numOfWords = sentences[sentenceIndex].split(" ").length;
 let numOfChar = sentences[sentenceIndex].length;
 let target = sentences[sentenceIndex][0];
 let markCode = ["10004", "10008"];
@@ -16,7 +16,7 @@ $(`<p>${sentences[sentenceIndex]}</p>`).appendTo('#sentence');
 
 
 let $yHighlighter = $('#yellow-block');
-let yLenght = 17;
+let yLength = 17;
 let $targetLetter = $('#target-letter');
 $targetLetter.text(sentences[sentenceIndex].charAt(0));
 
@@ -69,11 +69,11 @@ function typeSentence(char, currentPos) {
     switch (currentPos) {
         case 0:
             placeMark(char);
-            charHighlighter(currentPos + yLenght);
+            charHighlighter(currentPos + yLength);
             target = targeChar(currentPos + 1);
             break;
 
-        case (numOfChar * yLenght):
+        case (numOfChar * yLength):
             let $feedback = $('#feedback');
             $feedback.empty();
             adjustSentence(sentenceIndex);
@@ -83,7 +83,7 @@ function typeSentence(char, currentPos) {
 
         default:
             placeMark(char);
-            charHighlighter(currentPos + yLenght);
+            charHighlighter(currentPos + yLength);
             target = targeChar(currentPos);
             break;
 
@@ -134,17 +134,14 @@ function charHighlighter(currentPos) {
 
 function targeChar(currentPos) {
 
-    if (currentPos == (numOfChar - 1) * yLenght) {
-
+    if (currentPos == (numOfChar - 1) * yLength) {
         $targetLetter.text('Press any key to contine');
 
     } else if (currentPos == 0) {
-
-        $targetLetter.text(sentences[sentenceIndex].charAt(currentPos / yLenght));
+        $targetLetter.text(sentences[sentenceIndex].charAt(currentPos / yLength));
 
     } else {
-
-        $targetLetter.text(sentences[sentenceIndex].charAt((currentPos / yLenght) + 1));
+        $targetLetter.text(sentences[sentenceIndex].charAt((currentPos / yLength) + 1));
     }
     return $targetLetter.text();
 }
@@ -154,17 +151,28 @@ function placeMark(char) {
     let $feedback = $('#feedback');
 
     if (char == " ") {
-
         $(`<span class="invisible">&#${markCode[1]};</span>`).appendTo($feedback);
 
     } else if (target == char) {
-
         $feedback.append(`<span class='feedback-check'>&#${markCode[0]};</span>`);
 
     } else {
-
         $feedback.append(`<span class='feedback-ex'>&#${markCode[1]};</span>`);
     }
 
 
+}
+
+
+function typeSpeed(start,end){
+    let numOfMisakes = $('#feedback span.feedback-ex').length;
+    let mintues = (end-start)*(60000)**-1;
+    let wpm = (numOfWords*mintues**-1)-2*numOfMistakes;
+    return wpm;
+    
+}
+
+function timer(){
+    return performance.now();
+    
 }
